@@ -1,0 +1,16 @@
+/*!
+ * Start Bootstrap - Busines Frontpage (https://startbootstrap.com/template-overviews/business-frontpage)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-business-frontpage/blob/master/LICENSE)
+ */
+
+.page-header {
+	min-height: 100vh;
+	background: rgb(234,234,255);
+	background: radial-gradient(circle, rgba(234,234,255,1) 0%, rgba(236,236,255,1) 35%, rgba(252,252,254,1) 100%);
+}
+
+.feature{
+	height: 100%;
+	max-width: 30em;
+}
