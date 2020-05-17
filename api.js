@@ -1,23 +1,22 @@
-import { getJobs, getJob } from "./base.js";
-
-var jobs = [];
-
-getJobs().then(function (data) {
-    for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
-        var j = data_1[_i];
-        loop(j.rq_id);
-    }
-});
-
-function loop(rq_id) {
-    var count = 0;
-    getJob(rq_id).then(function (data) {
-        if (data.is_complete == false && count < 20) {
-            count++;
-            console.log("WAITING", data);
-            setTimeout(function () { return loop(rq_id); }, 2000);
+import { getJobs } from "./base.js";
+export var jobs = [];
+export function loop(rq_id) {
+    getJobs().then(function (data) {
+        if (data.length < jobs.length) {
+            location.reload();
         }
-        else
-            console.log("JOB " + rq_id + " COMPLETED", data);
+        else if (data.length > jobs.length) {
+            jobs = data;
+            console.log(jobs);
+            // add all the new jobs to the jobs tab
+        }
     });
+    // getJob(rq_id).then((data: Job) => {
+    // 	if (data.is_complete == false && count < 20){
+    // 		count++;
+    // 		console.log("WAITING", data);
+    // 		setTimeout(() => loop(rq_id), 2000);
+    // 	}
+    // 	else console.log(`JOB ${rq_id} COMPLETED`, data);
+    // });
 }
