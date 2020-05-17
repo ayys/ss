@@ -28,7 +28,7 @@
     font-family: 'Ubuntu';
     font-style:  normal;
     font-weight: 400;
-    src: url('/static/Ubuntu-Regular.ttf');
+    src: url('https://cdn.jsdelivr.net/gh/ayys/ss@master/Ubuntu-Regular.ttf');
 
 }
 
