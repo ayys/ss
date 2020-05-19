@@ -231,6 +231,7 @@ function add_ssh_key() {
 	if (!validate_ssh_key()){
 		toastr.warning("The SSH Key is not valid", "Validation Failed");
 	} else {
+		let csrf_token = $("[name=csrfmiddlewaretoken]").val();
 		let value = $("#ssh_key").val();
 		let split_vals = value.split(" ");
 		fetch("/sshkey/", {
