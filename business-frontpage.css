@@ -6,11 +6,19 @@
 
 .page-header {
 	min-height: 100vh;
-	background: rgb(234,234,255);
-	background: radial-gradient(circle, rgba(234,234,255,1) 0%, rgba(236,236,255,1) 35%, rgba(252,252,254,1) 100%);
+	background-color: #28a745;
+	background: 
 }
 
 .feature{
 	height: 100%;
 	max-width: 30em;
+}
+
+.call-to-action-button{
+    background-color: #59a728;
+}
+
+.call-to-action-button :hover {
+    background-clor: #32363b;
 }

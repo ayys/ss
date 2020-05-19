@@ -26,6 +26,11 @@ body {
 	z-index: 1030;
 }
 
+.fixed-top {
+	z-index: 1040;
+}
+
+
 @media (min-width: 768px) {
 	.navbar.fixed-left {
 		bottom: 0;

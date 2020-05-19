@@ -60,6 +60,14 @@ body {
     background-color: #ffffffef;
 }
 
+.bg-dark {
+    background-color: #0ca274;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff;
+}
+
 .cursor {
     border-right: .5em solid #414141; /* The typwriter cursor */
     animation: blink-caret 2s step-end infinite;
