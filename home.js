@@ -218,6 +218,47 @@ function delete_domain(button) {
 		});
 }
 
+function validate_ssh_key() {
+	let value = $("#ssh_key").val();
+	let split_vals = value.split(" ");
+	if (split_vals.length != 3 && split_vals[1].length % 4 == 0 && /[0-9A-Za-z\+\/]/.test(split_vals[1])){
+		return true;
+	}
+	return false;
+}
+
+function add_ssh_key() {
+	if (!validate_ssh_key()){
+		toastr.warning("The SSH Key is not valid", "Validation Failed");
+	} else {
+		let value = $("#ssh_key").val();
+		let split_vals = value.split(" ");
+		fetch("/sshkey/", {
+			method: "post",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'X-CSRFToken': csrf_token
+			},
+			body: JSON.stringify({
+				key_type: split_vals[0],
+				key: split_vals[1],
+				comment: split_vals[2],
+			})
+		}).then(data => {
+			if (data.status != 200)
+				data.json().then(data => {
+					toastr.error(data.message, "Could not create service!");
+				});
+			else {
+			location.reload();	// reload if key was added
+			}
+		});
+	}
+}
+
+
+
 function clear_active(el) {
 	$(".link").each( (index, element) => {
 		if ($(element).attr("href") != $(el).attr("href"))
@@ -268,6 +309,9 @@ $(document).ready(function() {
     });
     $(".link").click(function () {
 		clear_active(this);
+    });
+    $(".add-ssh-key").click(function () {
+		add_ssh_key();
     });
 
     loop(true);
