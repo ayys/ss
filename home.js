@@ -221,7 +221,7 @@ function delete_domain(button) {
 function validate_ssh_key() {
 	let value = $("#ssh_key").val();
 	let split_vals = value.split(" ");
-	if (split_vals.length != 3 && split_vals[1].length % 4 == 0 && /[0-9A-Za-z\+\/]/.test(split_vals[1])){
+	if (split_vals.length == 3 && split_vals[1].length % 4 == 0 && /[0-9A-Za-z\+\/]/.test(split_vals[1])){
 		return true;
 	}
 	return false;
@@ -313,7 +313,6 @@ $(document).ready(function() {
     $(".add-ssh-key").click(function () {
 		add_ssh_key();
     });
-
     loop(true);
     setInterval(() => loop(true), 10000); // run forced loop every 10 seconds
 	setInterval(() => loop(), 5000); // run forced loop every 5 seconds
