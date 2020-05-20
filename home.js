@@ -78,7 +78,6 @@ function create_service (ttl, package_id, os_id, autopilot, add_sshkey, csrf_tok
 			});
 		loop(true);				// force loop to call API
     });
-
 }
 
 function action_api(service_id, action) {
