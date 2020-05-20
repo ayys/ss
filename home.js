@@ -55,7 +55,7 @@ function loop(force=false) {
     });
 }
 
-function create_service (ttl, package_id, os_id, autopilot, csrf_token) {
+function create_service (ttl, package_id, os_id, autopilot, add_sshkey, csrf_token) {
     var url = '/service/s/';
     fetch(url, {
 		method: "post",
@@ -68,7 +68,8 @@ function create_service (ttl, package_id, os_id, autopilot, csrf_token) {
 			ttl: ttl,
 			package: package_id,
 			os: os_id,
-			autopilot: autopilot
+			autopilot: autopilot,
+			add_sshkey: add_sshkey
 		})
     }).then(data => {
 		if (data.status != 200)
@@ -107,15 +108,18 @@ function create(button) {
     let package_id = $("[name=package]").val();
     let os_id = $("[name=os]").val();
     let autopilot = "false";
+	let add_sshkey = "false";
 	if ($("[name=autopilot]").is(":checked"))
 		autopilot = "true";
+	if ($("[name=add_sshkey]").is(":checked"))
+		add_sshkey = "true";
     let csrf_token = $("[name=csrfmiddlewaretoken]").val();
     if (ttl == "" || package_id == "" || os_id == "" || isNaN(ttl) || isNaN(package_id) || isNaN(os_id)){
 		toastr.error("Cannot create service because form is invalid!", "Oops!");
     }
     else {
 		toastr.info("Starting service creation", "Service Action");
-		create_service(ttl, package_id, os_id, autopilot, csrf_token);
+		create_service(ttl, package_id, os_id, autopilot, add_sshkey, csrf_token);
     }
 }
 
