@@ -221,6 +221,27 @@ function delete_domain(button) {
 		});
 }
 
+function delete_sshkey(button) {
+    var domain_id = $(button).attr("ssh-key-id");
+    let csrf_token = $("[name=csrfmiddlewaretoken]").val();
+    fetch(`/sshkey/${domain_id}/`, {
+		method: "delete",
+		headers: {
+			'X-CSRFToken': csrf_token
+		}}).then(data => {
+			if (data.status == 204) {
+				toastr.success("Successfully removed SSH Key");
+				location.reload();
+			}
+			else {
+				data.json().then(data => {
+					toastr.error(data.message, "Could not remove SSH Key");
+				});
+			}
+		});
+}
+
+
 function validate_ssh_key() {
 	let value = $("#ssh_key").val();
 	let split_vals = value.split(" ");
@@ -316,6 +337,9 @@ $(document).ready(function() {
     });
     $(".add-ssh-key").click(function () {
 		add_ssh_key();
+    });
+    $(".ssh-key-delete").click(function () {
+		delete_sshkey(this);
     });
     loop(true);
     setInterval(() => loop(true), 10000); // run forced loop every 10 seconds
