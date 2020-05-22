@@ -31,11 +31,6 @@ function render_services() {
 	});
 }
 
-function set_service_tab(){
-	let tabs_html = $("#serviceTabTemplate").render(services);
-	$("#actionstab").append(tabs_html);
-}
-
 function loop(force=false) {
     // force is set to true by events such as button press which need to immediately call the function
     if (force == false && jobs.length == 0) return;
@@ -321,7 +316,6 @@ function clear_active(el) {
 
 $(document).ready(function() {
     render_services();
-	set_service_tab();
     // attach the functions to button clicks
     $(".button-service-stop").click(function () {
 		stop(this);
