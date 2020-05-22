@@ -2,6 +2,19 @@ import {getJobs, getJob} from "./base.js";
 import {button_restart, button_start, button_stop, button_delete, enable_all_buttons} from "./buttonStates.js";
 
 
+function load_active_tab(){
+	let active_tab = localStorage.getItem("active_tab");
+	if (active_tab && $(active_tab).length > 0) {
+		$(".tab-pane").removeClass("active").removeClass("show");
+		$(active_tab).addClass("active").addClass("show");
+		$(".link").removeClass("active");
+		$(`[href="${active_tab}"]`).addClass("active");
+	} else {
+		$("#no-services").addClass("active").addClass("show");
+		$(`[href="#no-services"]`).addClass("active");
+	}
+}
+
 let jobs = [];
 
 
@@ -64,6 +77,7 @@ async function render_services() {
 			console.log(data);
 			set_services_tab(services);
 			set_services_tabpane(services);
+			load_active_tab();
 		}
 		else console.log("Oh No!", data);
 		return services;
@@ -399,15 +413,6 @@ $(document).ready(function() {
 
 
 		// load active tab
-		let active_tab = localStorage.getItem("active_tab");
-		if (active_tab && $(active_tab).length > 0) {
-			$(".tab-pane").removeClass("active").removeClass("show");
-			$(active_tab).addClass("active").addClass("show");
-			$(".link").removeClass("active");
-			$(`[href="${active_tab}"]`).addClass("active");
-		} else {
-			$("#no-services").addClass("active").addClass("show");
-			$(`[href="#no-services"]`).addClass("active");
-		}
+		load_active_tab();
 	});
 });
