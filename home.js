@@ -157,6 +157,7 @@ function loop(force=false) {
 			jobs = data;
 			new_jobs.forEach((job) => toastr.info(job.description));
 		}
+		jobs = data;
 		var el = $("#currently-running-jobs");
 		var tab = $("#jobs-tab");
 		var html = "";
@@ -413,7 +414,6 @@ function add_ssh_key() {
 
 $(document).ready(function() {
     render_services().then(data => {
-		console.log("Hello world");
 		// attach the functions to button clicks
 		loop(true);
 		setInterval(() => loop(true), 10000); // run forced loop every 10 seconds
