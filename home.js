@@ -140,19 +140,22 @@ function loop(force=false) {
     getJobs().then((data) => {
 		if (data.length < jobs.length) {
 			// check if the job was completed or if it threw errors
-			data.forEach((job, index) => {
+			// get the jobs that were completed and show success for those only
+			let completed_jobs = jobs.filter(job => !new Set(data).has(job));
+			completed_jobs.forEach((job, index) => {
 				if (job.status == "finished", "Success!")
 					toastr.success(job.description);
 				else if (job.status == "failed")
 					toastr.error(job.description, "Oops!");
 			});
 			render_services().then((data) => {
-				toastr.success(" updated", "Success!");
 			});
 			jobs = data;
 		} else if (data.length > jobs.length) {
+			// get a list of new jobs
+			let new_jobs = data.filter(job => !new Set(jobs).has(job));
 			jobs = data;
-			jobs.forEach((job) => toastr.info(job.description));
+			new_jobs.forEach((job) => toastr.info(job.description));
 		}
 		var el = $("#currently-running-jobs");
 		var tab = $("#jobs-tab");
