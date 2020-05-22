@@ -1,7 +1,12 @@
-import {getJobs, getJob} from "./base.js";
-
 import {button_restart, button_start, button_stop, button_delete, enable_all_buttons} from "./buttonStates.js";
 
+async function getJobs() {
+	fetch("/job/").then(resp => {
+		if (resp.status == 200)
+			return resp.json();
+		return new Promise();
+	});
+}
 
 function load_active_tab(){
 	let active_tab = localStorage.getItem("active_tab");
