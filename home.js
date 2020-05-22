@@ -1,4 +1,5 @@
 import {getJobs, getJob} from "./base.js";
+
 import {button_restart, button_start, button_stop, button_delete, enable_all_buttons} from "./buttonStates.js";
 
 
@@ -13,6 +14,54 @@ function load_active_tab(){
 		$("#no-services").addClass("active").addClass("show");
 		$(`[href="#no-services"]`).addClass("active");
 	}
+}
+
+function set_click_functions() {
+	$(".button-service-stop").click(function () {
+		stop(this);
+	});
+	$(".button-service-start").click(function() {
+		start(this);
+	});
+	$(".button-service-restart").click(function () {
+		restart(this);
+	});
+	$(".button-service-delete").click(function () {
+		s_delete(this);
+	});
+	$(".button-service-create").click(function () {
+		create(this);
+	});
+	$(".button-service-toggle-autopilot").click(function () {
+		toggle_autopilot(this);
+	});
+	$(".button-service-add-domain").click(function () {
+		add_domain(this);
+	});
+	$(".button-service-delete-domain").click(function () {
+		delete_domain(this);
+	});
+	$(".button-service-refresh-snapshot").click(function () {
+		refresh_snapshot(this);
+	});
+	$(".button-service-restore-snapshot").click(function () {
+		restore_snapshot(this);
+	});
+	$(".check-jobs").click(function () {
+		loop(true);
+	});
+	$(".link").click(function () {
+		clear_active(this);
+	});
+	$(".add-ssh-key").click(function () {
+		add_ssh_key();
+	});
+	$(".ssh-key-delete").click(function () {
+		delete_sshkey(this);
+	});
+	$(".link").click(function () {
+		clear_active(this);
+	});
 }
 
 let jobs = [];
@@ -78,6 +127,7 @@ async function render_services() {
 			set_services_tab(services);
 			set_services_tabpane(services);
 			load_active_tab();
+			set_click_functions();
 		}
 		else console.log("Oh No!", data);
 		return services;
@@ -361,51 +411,6 @@ function add_ssh_key() {
 $(document).ready(function() {
     render_services().then(data => {
 		console.log("Hello world");
-	    $(".button-service-stop").click(function () {
-			stop(this);
-		});
-		$(".button-service-start").click(function() {
-			start(this);
-		});
-		$(".button-service-restart").click(function () {
-			restart(this);
-		});
-		$(".button-service-delete").click(function () {
-			s_delete(this);
-		});
-		$(".button-service-create").click(function () {
-			create(this);
-		});
-		$(".button-service-toggle-autopilot").click(function () {
-			toggle_autopilot(this);
-		});
-		$(".button-service-add-domain").click(function () {
-			add_domain(this);
-		});
-		$(".button-service-delete-domain").click(function () {
-			delete_domain(this);
-		});
-		$(".button-service-refresh-snapshot").click(function () {
-			refresh_snapshot(this);
-		});
-		$(".button-service-restore-snapshot").click(function () {
-			restore_snapshot(this);
-		});
-		$(".check-jobs").click(function () {
-			loop(true);
-		});
-		$(".link").click(function () {
-			clear_active(this);
-		});
-		$(".add-ssh-key").click(function () {
-			add_ssh_key();
-		});
-		$(".ssh-key-delete").click(function () {
-			delete_sshkey(this);
-		});
-		$(".link").click(function () {
-			clear_active(this);
-		});
 		// attach the functions to button clicks
 		loop(true);
 		setInterval(() => loop(true), 10000); // run forced loop every 10 seconds
