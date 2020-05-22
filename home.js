@@ -61,6 +61,7 @@ async function render_services() {
 		let services = [];
 		if (data.response.status ==  200){
 			services = data.services;
+			console.log(data);
 			set_services_tab(services);
 			set_services_tabpane(services);
 		}
@@ -82,33 +83,30 @@ function loop(force=false) {
 					toastr.error(job.description, "Oops!");
 			});
 			render_services().then((data) => {
-				toastr.success("Services updated", "Success!");
+				toastr.success(" updated", "Success!");
 			});
+			jobs = data;
 		} else if (data.length > jobs.length) {
 			jobs = data;
 			jobs.forEach((job) => toastr.info(job.description));
 		}
-		jobs = data;
-		if (jobs.length  > 0){
-			// add all the new jobs to the jobs tab
-			var el = $("#currently-running-jobs");
-			var tab = $("#jobs-tab");
-			var html = "";
-			tab.html( `<i class="fas fa-lg fa-running" style='min-width:30px;'></i> View Running Jobs <span class='badge badge-danger'>${jobs.length}</span>`);
-			for (let job of jobs) {
-				let icon = '';
-				if (job.status == "queued") {
-					icon = 'far fa-lg fa-clock';
-				} else icon = 'fa fa-cog fa-spin fa-lg fa-fw';
-				html += `
+		var el = $("#currently-running-jobs");
+		var tab = $("#jobs-tab");
+		var html = "";
+		tab.html( `<i class="fas fa-lg fa-running" style='min-width:30px;'></i> View Running Jobs <span class='badge badge-danger'>${jobs.length}</span>`);
+		for (let job of jobs) {
+			let icon = '';
+			if (job.status == "queued") {
+				icon = 'far fa-lg fa-clock';
+			} else icon = 'fa fa-cog fa-spin fa-lg fa-fw';
+			html += `
                          <div class="card mb-2">
 			 	<div class="card-body">
 			 		<i style="min-width: 30px;" class="${icon}"></i> Job : ${job.description}
 			 	</div>
 			 </div>`;
-			}
-			el.html(html);
 		}
+		el.html(html);
     });
 }
 
