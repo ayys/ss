@@ -6,6 +6,8 @@ let jobs = [];
 
 let services = [];
 
+let state_fetching = false;
+
 function clear_active(el) {
 	$(".link").each( (index, element) => {
 		if ($(element).attr("href") != $(el).attr("href"))
@@ -21,15 +23,22 @@ function clear_active(el) {
 
 
 async function fetch_services(){
-	return fetch("/service/s/").then(resp => resp.json().then(data => {
-		data.results.forEach((service) => service['minutes_left'] = function() {
-			return ((new Date() - this.creation_time) / 1000 / 60).toFixed(0);
-		});
-		return {
-			response: resp,
-			services : data.results
-		};
-	}));
+	if (!state_fetching){
+		// wait for 2 seconds to reduce server crowding
+		await new Promise(res => setTimeout(res, 2000));
+		state_fetching = true;
+		return fetch("/service/s/").then(resp => resp.json().then(data => {
+			state_fetching = false;
+			data.results.forEach((service) => service['minutes_left'] = function() {
+				return ((new Date() - this.creation_time) / 1000 / 60).toFixed(0);
+			});
+			return {
+				response: resp,
+				services : data.results
+			};
+		}));
+	}
+	return null;
 }
 
 function set_services_tab(){
