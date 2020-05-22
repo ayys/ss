@@ -1,10 +1,10 @@
 import {button_restart, button_start, button_stop, button_delete, enable_all_buttons} from "./buttonStates.js";
 
 async function getJobs() {
-	fetch("/job/").then(resp => {
+	return fetch("/job/").then(resp => {
 		if (resp.status == 200)
 			return resp.json();
-		return new Promise();
+		return new Promise(() => new Object());
 	});
 }
 
@@ -107,6 +107,18 @@ async function fetch_services(){
 	return null;
 }
 
+async function fetch_keys(){
+	// wait for 2 seconds to reduce server crowding
+	return fetch("/sshkey/").then(resp => resp.json().then(data => {
+		return {
+			response: resp,
+			keys : data.results
+		};
+	}));
+	return null;
+}
+
+
 function set_services_tab(services){
 	let services_tab_heading = $("#servicesTabHeadingTemplate").render({count: services.length});
 	let services_tab = $("#servicesTabTemplate").render(services);
@@ -122,6 +134,15 @@ function set_services_tabpane(services){
 	$(".generated-service-tab").remove();
 	$("#actions-tabcontent").append(service_panes);
 }
+
+function set_keys(keys){
+	let sshkeys = $("#sshKeyTemplate").render(keys);
+	$("#list-ssh-keys").html(sshkeys);
+	$(".ssh-key-delete").click(function () {
+		delete_sshkey(this);
+	});
+}
+
 
 async function render_services() {
 	return fetch_services().then(data => {
@@ -139,10 +160,27 @@ async function render_services() {
 	});
 }
 
+
+async function render_keys() {
+	return fetch_keys().then(data => {
+		let keys = [];
+		if (data.response.status ==  200){
+			keys = data.keys;
+			console.log(data);
+			set_keys(keys);
+		}
+		else console.log("Oh No!", data);
+		return keys;
+	});
+}
+
+
+
 function loop(force=false) {
     // force is set to true by events such as button press which need to immediately call the function
     if (force == false && jobs.length == 0) return;
     getJobs().then((data) => {
+		data = data.results;
 		if (data.length < jobs.length) {
 			// check if the job was completed or if it threw errors
 			// get the jobs that were completed and show success for those only
@@ -354,22 +392,20 @@ function delete_domain(button) {
 }
 
 function delete_sshkey(button) {
-    var domain_id = $(button).attr("ssh-key-id");
+    var key_id = $(button).attr("ssh-key-id");
     let csrf_token = $("[name=csrfmiddlewaretoken]").val();
-    fetch(`/sshkey/${domain_id}/`, {
+    fetch(`/sshkey/${key_id}/`, {
 		method: "delete",
 		headers: {
 			'X-CSRFToken': csrf_token
-		}}).then(data => {
-			if (data.status == 204) {
-				render_services().then((data) => {
+		}}).then(resp => {
+			if (resp.status == 204) {
+				render_keys().then((js) => {
 					toastr.success("Successfully removed SSH Key");
 				});
 			}
 			else {
-				data.json().then(data => {
-					toastr.error(data.message, "Could not remove SSH Key");
-				});
+				toastr.error(data.message, "Could not remove SSH Key");
 			}
 		});
 }
@@ -406,11 +442,11 @@ function add_ssh_key() {
 		}).then(data => {
 			if (data.status != 200)
 				data.json().then(data => {
-					toastr.error(data.message, "Could not create service!");
+					toastr.error(data.message, "Could not add key!");
 				});
 			else {
-				render_services().then((data) => {
-					toastr.success("Service successfully created", "Success!");
+				render_keys().then((data) => {
+					toastr.success("Key was successfully added to your account", "Success!");
 				});
 			}
 		});
@@ -428,4 +464,6 @@ $(document).ready(function() {
 		// load active tab
 		load_active_tab();
 	});
+	load_active_tab();
+	render_keys().then((data) => {} );
 });
