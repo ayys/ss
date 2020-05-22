@@ -16,8 +16,9 @@ async function fetch_services(){
 }
 
 function set_services_tab(){
-	let tabs_html = $("#serviceTabTemplate").render(services);
-	$("#actionstab").append(tabs_html);
+	let services_tab_heading = $("#serviceTabTemplate").render(services);
+	let services_tab = $("#serviceTabTemplate").render(services);
+	$("#servicstab").html(services_tab_heading).append(services_tab);
 }
 
 function render_services() {
