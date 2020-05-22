@@ -72,7 +72,9 @@ function loop(force=false) {
 				else if (job.status == "failed")
 					toastr.error(job.description, "Oops!");
 			});
-			location.reload();
+			render_services().then((data) => {
+				toastr.success("Services updated", "Success!");
+			});
 		} else if (data.length > jobs.length) {
 			jobs = data;
 			jobs.forEach((job) => toastr.info(job.description));
@@ -180,7 +182,9 @@ function toggle_autopilot(button) {
     var url = `/service/s/${service_id}/toggle_autopilot/`;
     fetch(url).then(data => {
 		if (data.status == 200)
-			location.reload();
+			render_services().then((data) => {
+				toastr.success("Autopilot was toggled", "Success!");
+			});
 		else
 			toastr.error("Could not toggle autopilot for service!", "Ops!");
     });
@@ -235,8 +239,9 @@ function add_domain(button) {
 		})
     }).then(data => {
 		if (data.status == 200) {
-			toastr.success("Successfully added domain to service");
-			location.reload();
+			render_services().then((data) => {
+				toastr.success("New domain was successfully added", "Success!");
+			});
 		}
 		else {
 			data.json().then(data => {
@@ -256,8 +261,9 @@ function delete_domain(button) {
 			'X-CSRFToken': csrf_token
 		}}).then(data => {
 			if (data.status == 204) {
-				toastr.success("Successfully removed domain from service");
-				location.reload();
+				render_services().then((data) => {
+					toastr.success("Successfully removed domain from service");
+				});
 			}
 			else {
 				data.json().then(data => {
@@ -276,8 +282,9 @@ function delete_sshkey(button) {
 			'X-CSRFToken': csrf_token
 		}}).then(data => {
 			if (data.status == 204) {
-				toastr.success("Successfully removed SSH Key");
-				location.reload();
+				render_services().then((data) => {
+					toastr.success("Successfully removed SSH Key");
+				});
 			}
 			else {
 				data.json().then(data => {
@@ -322,7 +329,9 @@ function add_ssh_key() {
 					toastr.error(data.message, "Could not create service!");
 				});
 			else {
-				location.reload();	// reload if key was added
+				render_services().then((data) => {
+					toastr.success("Service successfully created", "Success!");
+				});
 			}
 		});
 	}
