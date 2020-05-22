@@ -1,17 +1,39 @@
 import {getJobs, getJob} from "./base.js";
 import {button_restart, button_start, button_stop, button_delete, enable_all_buttons} from "./buttonStates.js";
 
+
 let jobs = [];
 
 let services = [];
 
-function get_services() {
-	fetch("/service/s/").then(resp => resp.json().then(data => {
-		if (resp.status == 200)
-			services = data.results;
-		else
-			console.log("Error!");
+async function fetch_services(){
+	return fetch("/service/s/").then(resp => resp.json().then(data => {
+		return {
+		response: resp,
+			services : data.results
+		};
 	}));
+}
+
+function set_services_tab(){
+	let tabs_html = $("#serviceTabTemplate").render(services);
+	$("#actionstab").append(tabs_html);
+}
+
+function render_services() {
+	fetch_services().then(data => {
+		if (data.response.status ==  200){
+			services = data.services;
+			set_services_tab();
+		}
+		else console.log("Oh No!", data);
+	});
+}
+
+function set_service_tab(refresh=false){
+	if (refresh) get_services();
+	let tabs_html = $("#serviceTabTemplate").render(services);
+	$("#actionstab").append(tabs_html);
 }
 
 function loop(force=false) {
@@ -298,6 +320,8 @@ function clear_active(el) {
 }
 
 $(document).ready(function() {
+    get_services();
+	set_service_tab();
     // attach the functions to button clicks
     $(".button-service-stop").click(function () {
 		stop(this);
