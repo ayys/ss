@@ -6,10 +6,27 @@ let jobs = [];
 
 let services = [];
 
+function clear_active(el) {
+	$(".link").each( (index, element) => {
+		if ($(element).attr("href") != $(el).attr("href"))
+			$(element).removeClass("active");
+		else if (element != el && !$(element).hasClass("active")) {
+			$(element).addClass("active");
+		}
+	} );
+	let href = $(el).attr("href");
+	console.log(href);
+	localStorage.setItem("active_tab", href);
+}
+
+
 async function fetch_services(){
 	return fetch("/service/s/").then(resp => resp.json().then(data => {
+		data.results.forEach((service) => service['minutes_left'] = function() {
+			return ((new Date() - this.creation_time) / 1000 / 60).toFixed(0);
+		});
 		return {
-		response: resp,
+			response: resp,
 			services : data.results
 		};
 	}));
@@ -24,11 +41,22 @@ function set_services_tab(){
     });
 }
 
+function set_services_tabpane(){
+	let service_panes = $("#serviceTemplate").render(services);
+	let tabcontent = $("#actions-tabcontent");
+	$(".generated-service-tab").remove();
+	$("#actions-tabcontent").append(service_panes);
+    $(".link").click(function () {
+		clear_active(this);
+    });
+}
+
 function render_services() {
 	fetch_services().then(data => {
 		if (data.response.status ==  200){
 			services = data.services;
 			set_services_tab();
+			set_services_tabpane();
 		}
 		else console.log("Oh No!", data);
 	});
@@ -304,18 +332,6 @@ function add_ssh_key() {
 
 
 
-function clear_active(el) {
-	$(".link").each( (index, element) => {
-		if ($(element).attr("href") != $(el).attr("href"))
-			$(element).removeClass("active");
-		else if (element != el && !$(element).hasClass("active")) {
-			$(element).addClass("active");
-		}
-	} );
-	let href = $(el).attr("href");
-	console.log(href);
-	localStorage.setItem("active_tab", href);
-}
 
 $(document).ready(function() {
     render_services();
