@@ -4,7 +4,6 @@ import {button_restart, button_start, button_stop, button_delete, enable_all_but
 
 let jobs = [];
 
-let services = [];
 
 let state_fetching = false;
 
@@ -41,7 +40,7 @@ async function fetch_services(){
 	return null;
 }
 
-function set_services_tab(){
+function set_services_tab(services){
 	let services_tab_heading = $("#servicesTabHeadingTemplate").render({count: services.length});
 	let services_tab = $("#servicesTabTemplate").render(services);
 	$("#servicestab").html(services_tab_heading).append(services_tab);
@@ -50,7 +49,7 @@ function set_services_tab(){
     });
 }
 
-function set_services_tabpane(){
+function set_services_tabpane(services){
 	let service_panes = $("#serviceTemplate").render(services);
 	let tabcontent = $("#actions-tabcontent");
 	$(".generated-service-tab").remove();
@@ -59,10 +58,11 @@ function set_services_tabpane(){
 
 async function render_services() {
 	return fetch_services().then(data => {
+		let services = [];
 		if (data.response.status ==  200){
 			services = data.services;
-			set_services_tab();
-			set_services_tabpane();
+			set_services_tab(services);
+			set_services_tabpane(services);
 		}
 		else console.log("Oh No!", data);
 		return services;
