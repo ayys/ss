@@ -30,8 +30,7 @@ function render_services() {
 	});
 }
 
-function set_service_tab(refresh=false){
-	if (refresh) get_services();
+function set_service_tab(){
 	let tabs_html = $("#serviceTabTemplate").render(services);
 	$("#actionstab").append(tabs_html);
 }
@@ -320,7 +319,7 @@ function clear_active(el) {
 }
 
 $(document).ready(function() {
-    get_services();
+    render_services();
 	set_service_tab();
     // attach the functions to button clicks
     $(".button-service-stop").click(function () {
