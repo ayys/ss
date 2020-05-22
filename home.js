@@ -328,11 +328,9 @@ function add_ssh_key() {
 	}
 }
 
-
-
-
 $(document).ready(function() {
     render_services().then(data => {
+		console.log("Hello world");
 	    $(".button-service-stop").click(function () {
 			stop(this);
 		});
@@ -378,23 +376,22 @@ $(document).ready(function() {
 		$(".link").click(function () {
 			clear_active(this);
 		});
+		// attach the functions to button clicks
+		loop(true);
+		setInterval(() => loop(true), 10000); // run forced loop every 10 seconds
+		setInterval(() => loop(), 5000); // run forced loop every 5 seconds
+
+
+		// load active tab
+		let active_tab = localStorage.getItem("active_tab");
+		if (active_tab && $(active_tab).length > 0) {
+			$(".tab-pane").removeClass("active").removeClass("show");
+			$(active_tab).addClass("active").addClass("show");
+			$(".link").removeClass("active");
+			$(`[href="${active_tab}"]`).addClass("active");
+		} else {
+			$("#no-services").addClass("active").addClass("show");
+			$(`[href="#no-services"]`).addClass("active");
+		}
 	});
-
-    // attach the functions to button clicks
-    loop(true);
-    setInterval(() => loop(true), 10000); // run forced loop every 10 seconds
-	setInterval(() => loop(), 5000); // run forced loop every 5 seconds
-
-
-	// load active tab
-	let active_tab = localStorage.getItem("active_tab");
-	if (active_tab && $(active_tab).length > 0) {
-		$(".tab-pane").removeClass("active").removeClass("show");
-		$(active_tab).addClass("active").addClass("show");
-		$(".link").removeClass("active");
-		$(`[href="${active_tab}"]`).addClass("active");
-	} else {
-		$("#no-services").addClass("active").addClass("show");
-		$(`[href="#no-services"]`).addClass("active");
-	}
 });
