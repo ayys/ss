@@ -19,6 +19,9 @@ function set_services_tab(){
 	let services_tab_heading = $("#servicesTabHeadingTemplate").render({count: services.length});
 	let services_tab = $("#servicesTabTemplate").render(services);
 	$("#servicestab").html(services_tab_heading).append(services_tab);
+    $(".link").click(function () {
+		clear_active(this);
+    });
 }
 
 function render_services() {
