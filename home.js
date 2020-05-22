@@ -46,19 +46,17 @@ function set_services_tabpane(){
 	let tabcontent = $("#actions-tabcontent");
 	$(".generated-service-tab").remove();
 	$("#actions-tabcontent").append(service_panes);
-    $(".link").click(function () {
-		clear_active(this);
-    });
 }
 
-function render_services() {
-	fetch_services().then(data => {
+async function render_services() {
+	return fetch_services().then(data => {
 		if (data.response.status ==  200){
 			services = data.services;
 			set_services_tab();
 			set_services_tabpane();
 		}
 		else console.log("Oh No!", data);
+		return services;
 	});
 }
 
@@ -76,7 +74,7 @@ function loop(force=false) {
 			});
 			location.reload();
 		} else if (data.length > jobs.length) {
-			jobs = data
+			jobs = data;
 			jobs.forEach((job) => toastr.info(job.description));
 		}
 		jobs = data;
@@ -324,7 +322,7 @@ function add_ssh_key() {
 					toastr.error(data.message, "Could not create service!");
 				});
 			else {
-			location.reload();	// reload if key was added
+				location.reload();	// reload if key was added
 			}
 		});
 	}
@@ -334,50 +332,55 @@ function add_ssh_key() {
 
 
 $(document).ready(function() {
-    render_services();
+    render_services().then(data => {
+	    $(".button-service-stop").click(function () {
+			stop(this);
+		});
+		$(".button-service-start").click(function() {
+			start(this);
+		});
+		$(".button-service-restart").click(function () {
+			restart(this);
+		});
+		$(".button-service-delete").click(function () {
+			s_delete(this);
+		});
+		$(".button-service-create").click(function () {
+			create(this);
+		});
+		$(".button-service-toggle-autopilot").click(function () {
+			toggle_autopilot(this);
+		});
+		$(".button-service-add-domain").click(function () {
+			add_domain(this);
+		});
+		$(".button-service-delete-domain").click(function () {
+			delete_domain(this);
+		});
+		$(".button-service-refresh-snapshot").click(function () {
+			refresh_snapshot(this);
+		});
+		$(".button-service-restore-snapshot").click(function () {
+			restore_snapshot(this);
+		});
+		$(".check-jobs").click(function () {
+			loop(true);
+		});
+		$(".link").click(function () {
+			clear_active(this);
+		});
+		$(".add-ssh-key").click(function () {
+			add_ssh_key();
+		});
+		$(".ssh-key-delete").click(function () {
+			delete_sshkey(this);
+		});
+		$(".link").click(function () {
+			clear_active(this);
+		});
+	});
+
     // attach the functions to button clicks
-    $(".button-service-stop").click(function () {
-		stop(this);
-    });
-    $(".button-service-start").click(function() {
-		start(this);
-    });
-    $(".button-service-restart").click(function () {
-		restart(this);
-    });
-    $(".button-service-delete").click(function () {
-		s_delete(this);
-    });
-    $(".button-service-create").click(function () {
-		create(this);
-    });
-    $(".button-service-toggle-autopilot").click(function () {
-		toggle_autopilot(this);
-    });
-    $(".button-service-add-domain").click(function () {
-		add_domain(this);
-    });
-    $(".button-service-delete-domain").click(function () {
-		delete_domain(this);
-    });
-    $(".button-service-refresh-snapshot").click(function () {
-		refresh_snapshot(this);
-    });
-    $(".button-service-restore-snapshot").click(function () {
-		restore_snapshot(this);
-    });
-    $(".check-jobs").click(function () {
-		loop(true);
-    });
-    $(".link").click(function () {
-		clear_active(this);
-    });
-    $(".add-ssh-key").click(function () {
-		add_ssh_key();
-    });
-    $(".ssh-key-delete").click(function () {
-		delete_sshkey(this);
-    });
     loop(true);
     setInterval(() => loop(true), 10000); // run forced loop every 10 seconds
 	setInterval(() => loop(), 5000); // run forced loop every 5 seconds
